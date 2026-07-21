@@ -10,10 +10,38 @@ ORCID and papers, now that the workflow has been proven out.
 - [x] Confirm ORCID: `0000-0002-2224-4124` (Samvardhini Sridharan) — verified by Samvardhini opening
   the ORCID record directly
 - [x] Fetch and verify papers
-- [ ] Design the page for a short list (interview, then plan)
+- [x] Design the page for a short list (interview, then plan)
 - [ ] Build/update index.html and papers.json with real data
 - [ ] Refine the look
 - [ ] Publish live with GitHub Pages
+
+## Design plan (from interview)
+- **Focus:** personal narrative/timeline, not a dense CV list — 3 papers, chronological, each with
+  a short story blurb
+- **Style:** warm & personal
+- **Colors:** UW purple stays as the primary accent; each paper gets its own color so they can be
+  tracked/toggled individually:
+  - Nat Comms 2026 (genomics, most recent) → UW purple `#4b2e83` / dark `#9d8fd0`
+  - arXiv 2020 (ultrasound navigation) → terracotta `#b5563a` / dark `#d98a6f`
+  - eScholarship 2019 (breast cancer radiomics) → teal `#1f7a6c` / dark `#4bab99`
+- **Bio line (draft, editable):** "From medical imaging to population genomics — exploring how
+  structural variation shapes human and primate genomes, after starting out building real-time
+  navigation tools for cancer imaging."
+- **Chart:** one interactive per-year citations line chart, one line per paper in its own color.
+  Legend chips above the chart act as toggles: clicking a chip shows/hides that paper's line AND
+  scrolls to/highlights its blurb card in the timeline below. No cumulative or papers-per-year
+  charts this time — too sparse to be meaningful with 3 papers.
+- **Timeline cards (draft blurbs, editable):**
+  1. 2026, Nature Communications — "My most recent work, published in Nature Communications, maps
+     recurring structural variation at a hotspot on chromosome 17 across humans and great apes —
+     part of the Sudmant Lab's work on genome evolution."
+  2. 2020, arXiv — "Early in my research career, I helped evaluate a real-time optical-tracking
+     navigation system for contrast-enhanced ultrasound imaging, aimed at improving how clinicians
+     track tumors during scans."
+  3. 2019, eScholarship — "My first paper explored novel radiomics techniques for early breast
+     cancer detection using ultrasonography — the start of my interest in imaging and quantitative
+     biology."
+- **Dark mode:** toggle included, same as the sample page
 
 ## Notes
 - ORCID `0000-0002-2224-4124` has no works linked yet in OpenAlex, so fetch_papers.py (ORCID-based)
