@@ -11,7 +11,7 @@ ORCID and papers, now that the workflow has been proven out.
   the ORCID record directly
 - [x] Fetch and verify papers
 - [x] Design the page for a short list (interview, then plan)
-- [ ] Build/update index.html and papers.json with real data
+- [x] Build/update index.html and papers.json with real data
 - [ ] Refine the look
 - [ ] Publish live with GitHub Pages
 
