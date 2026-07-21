@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brendan MacLean — Publications</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page-plane:     #f9f9f7;
+    --surface-1:      #fcfcfb;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --accent:         #4b2e83; /* UW purple */
+    --accent-wash:    rgba(75,46,131,0.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page-plane:     #0d0d0d;
+      --surface-1:      #1a1a19;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --accent:         #9d8fd0;
+      --accent-wash:    rgba(157,143,208,0.14);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page-plane:     #0d0d0d;
+    --surface-1:      #1a1a19;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --accent:         #9d8fd0;
+    --accent-wash:    rgba(157,143,208,0.14);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-size: 2.25rem;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .bio { color: var(--text-secondary); margin: 0; max-width: 52ch; }
+
+  .theme-toggle {
+    flex: none;
+    border: 1px solid var(--border);
+    background: var(--surface-1);
+    color: var(--text-primary);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .theme-toggle:hover { border-color: var(--accent); }
+
+  .stat-row { margin: 40px 0 8px; }
+  .stat-tile {
+    display: inline-block;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 28px;
+  }
+  .stat-tile .label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin: 0 0 4px;
+  }
+  .stat-tile .value {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  section.charts { margin-top: 48px; }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    margin: 0 0 4px;
+  }
+  .section-note { color: var(--text-muted); font-size: 0.85rem; margin: 0 0 20px; }
+
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .chart-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 20px 12px;
+  }
+  .chart-card h3 {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  .chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .axis-label { fill: var(--text-muted); font-size: 10px; }
+  .gridline { stroke: var(--gridline); stroke-width: 1; }
+  .baseline { stroke: var(--baseline); stroke-width: 1; }
+
+  .tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    opacity: 0;
+    transition: opacity 0.1s;
+    white-space: nowrap;
+    z-index: 10;
+  }
+  .tooltip .tt-value { color: var(--text-primary); font-weight: 600; }
+  .tooltip .tt-label { color: var(--text-secondary); }
+
+  section.papers { margin-top: 48px; }
+  ul.paper-list { list-style: none; margin: 0; padding: 0; }
+  ul.paper-list li {
+    padding: 16px 0;
+    border-top: 1px solid var(--gridline);
+  }
+  ul.paper-list li:last-child { border-bottom: 1px solid var(--gridline); }
+  .paper-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .paper-title a:hover { color: var(--accent); text-decoration: underline; }
+  .paper-meta { color: var(--text-secondary); font-size: 0.9rem; margin-top: 3px; }
+  .paper-authors { color: var(--text-muted); font-size: 0.85rem; margin-top: 3px; }
+
+  footer {
+    margin-top: 56px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--gridline);
+    padding-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Brendan MacLean</h1>
+      <p class="bio">Software engineer, Skyline &amp; mass spec proteomics — University of Washington</p>
+    </div>
+    <button class="theme-toggle" id="theme-toggle" type="button">Dark mode</button>
+  </header>
+
+  <div class="stat-row">
+    <div class="stat-tile">
+      <p class="label">Total papers</p>
+      <p class="value" id="stat-total-papers">–</p>
+    </div>
+  </div>
+
+  <section class="charts">
+    <h2>Citations over time</h2>
+    <p class="section-note">OpenAlex breaks out citation counts by year from about 2012 on; earlier
+      citations still count toward each paper's lifetime total but aren't shown year-by-year here.</p>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Cumulative citations</h3>
+        <div id="chart-cumulative"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Citations per year</h3>
+        <div id="chart-per-year"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Papers published per year</h3>
+        <div id="chart-papers-per-year"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="papers">
+    <h2>Papers</h2>
+    <p class="section-note">Newest first. Titles link to the DOI.</p>
+    <ul class="paper-list" id="paper-list"></ul>
+  </section>
+
+  <footer>
+    Data from <a href="https://openalex.org" style="color:inherit">OpenAlex</a>, ORCID
+    <span id="footer-orcid"></span>. Built with Claude Code.
+  </footer>
+
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Theme toggle ----------
+  var root = document.documentElement;
+  var toggleBtn = document.getElementById("theme-toggle");
+  function applyTheme(theme) {
+    if (theme) {
+      root.setAttribute("data-theme", theme);
+    } else {
+      root.removeAttribute("data-theme");
+    }
+    toggleBtn.textContent = currentIsDark() ? "Light mode" : "Dark mode";
+  }
+  function currentIsDark() {
+    var stamped = root.getAttribute("data-theme");
+    if (stamped === "dark") return true;
+    if (stamped === "light") return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  toggleBtn.addEventListener("click", function () {
+    applyTheme(currentIsDark() ? "light" : "dark");
+  });
+  applyTheme(root.getAttribute("data-theme"));
+
+  // ---------- Tooltip helper ----------
+  var tooltip = document.getElementById("tooltip");
+  function showTooltip(x, y, labelText, valueText) {
+    tooltip.innerHTML = "";
+    var valueEl = document.createElement("div");
+    valueEl.className = "tt-value";
+    valueEl.textContent = valueText;
+    var labelEl = document.createElement("div");
+    labelEl.className = "tt-label";
+    labelEl.textContent = labelText;
+    tooltip.appendChild(valueEl);
+    tooltip.appendChild(labelEl);
+    tooltip.style.left = (x + 12) + "px";
+    tooltip.style.top = (y + 12) + "px";
+    tooltip.style.opacity = "1";
+  }
+  function hideTooltip() { tooltip.style.opacity = "0"; }
+
+  var accent = getComputedStyle(root).getPropertyValue("--accent").trim() || "#4b2e83";
+
+  // ---------- Chart builders (plain SVG, no libraries) ----------
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function niceMax(v) {
+    if (v <= 0) return 1;
+    var mag = Math.pow(10, Math.floor(Math.log10(v)));
+    var norm = v / mag;
+    var step = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10;
+    return step * mag;
+  }
+
+  function lineChart(container, data, opts) {
+    // data: [{label, value}], opts: {yLabel}
+    var w = 800, h = 220, padL = 44, padR = 12, padT = 12, padB = 28;
+    var plotW = w - padL - padR, plotH = h - padT - padB;
+    var svg = el("svg", { viewBox: "0 0 " + w + " " + h });
+    var maxV = niceMax(Math.max.apply(null, data.map(function (d) { return d.value; })));
+    var n = data.length;
+    function xAt(i) { return padL + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW); }
+    function yAt(v) { return padT + plotH - (v / maxV) * plotH; }
+
+    // gridlines (4 steps)
+    for (var g = 0; g <= 4; g++) {
+      var gv = (maxV / 4) * g;
+      var gy = yAt(gv);
+      svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: gy, y2: gy, class: "gridline" }));
+      var t = el("text", { x: padL - 8, y: gy + 3, class: "axis-label", "text-anchor": "end" });
+      t.textContent = Math.round(gv).toLocaleString();
+      svg.appendChild(t);
+    }
+    svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: padT + plotH, y2: padT + plotH, class: "baseline" }));
+
+    // x labels (sparse: first, last, and a few in between)
+    var step = Math.max(1, Math.ceil(n / 8));
+    for (var i = 0; i < n; i += step) {
+      var t2 = el("text", { x: xAt(i), y: h - 8, class: "axis-label", "text-anchor": "middle" });
+      t2.textContent = data[i].label;
+      svg.appendChild(t2);
+    }
+    if ((n - 1) % step !== 0) {
+      var t3 = el("text", { x: xAt(n - 1), y: h - 8, class: "axis-label", "text-anchor": "middle" });
+      t3.textContent = data[n - 1].label;
+      svg.appendChild(t3);
+    }
+
+    // area wash
+    var areaPts = data.map(function (d, i) { return xAt(i) + "," + yAt(d.value); }).join(" ");
+    var areaPath = "M" + xAt(0) + "," + (padT + plotH) + " L" + areaPts + " L" + xAt(n - 1) + "," + (padT + plotH) + " Z";
+    svg.appendChild(el("path", { d: areaPath, fill: accent, opacity: "0.10", stroke: "none" }));
+
+    // line
+    var linePts = data.map(function (d, i) { return xAt(i) + "," + yAt(d.value); }).join(" ");
+    svg.appendChild(el("polyline", { points: linePts, fill: "none", stroke: accent, "stroke-width": "2", "stroke-linejoin": "round", "stroke-linecap": "round" }));
+
+    // end marker + direct label
+    var lastX = xAt(n - 1), lastY = yAt(data[n - 1].value);
+    svg.appendChild(el("circle", { cx: lastX, cy: lastY, r: 4, fill: accent, stroke: "var(--surface-1)", "stroke-width": "2" }));
+    var lastLabel = el("text", { x: lastX - 6, y: lastY - 10, class: "axis-label", "text-anchor": "end", style: "font-weight:600" });
+    lastLabel.textContent = data[n - 1].value.toLocaleString();
+    svg.appendChild(lastLabel);
+
+    // crosshair + hit layer
+    var crosshair = el("line", { x1: 0, x2: 0, y1: padT, y2: padT + plotH, class: "baseline", style: "opacity:0" });
+    svg.appendChild(crosshair);
+    var hoverDot = el("circle", { r: 5, fill: accent, stroke: "var(--surface-1)", "stroke-width": "2", style: "opacity:0" });
+    svg.appendChild(hoverDot);
+
+    var hit = el("rect", { x: padL, y: padT, width: plotW, height: plotH, fill: "transparent" });
+    hit.addEventListener("pointermove", function (evt) {
+      var rect = svg.getBoundingClientRect();
+      var relX = ((evt.clientX - rect.left) / rect.width) * w;
+      var idx = Math.round(((relX - padL) / plotW) * (n - 1));
+      idx = Math.max(0, Math.min(n - 1, idx));
+      var px = xAt(idx), py = yAt(data[idx].value);
+      crosshair.setAttribute("x1", px); crosshair.setAttribute("x2", px);
+      crosshair.setAttribute("style", "opacity:1");
+      hoverDot.setAttribute("cx", px); hoverDot.setAttribute("cy", py);
+      hoverDot.setAttribute("style", "opacity:1");
+      showTooltip(evt.clientX, evt.clientY, opts.yLabel + " · " + data[idx].label, data[idx].value.toLocaleString());
+    });
+    hit.addEventListener("pointerleave", function () {
+      crosshair.setAttribute("style", "opacity:0");
+      hoverDot.setAttribute("style", "opacity:0");
+      hideTooltip();
+    });
+    svg.appendChild(hit);
+
+    container.appendChild(svg);
+  }
+
+  function barChart(container, data, opts) {
+    var w = 800, h = 220, padL = 44, padR = 12, padT = 12, padB = 28;
+    var plotW = w - padL - padR, plotH = h - padT - padB;
+    var svg = el("svg", { viewBox: "0 0 " + w + " " + h });
+    var maxV = niceMax(Math.max.apply(null, data.map(function (d) { return d.value; })));
+    var n = data.length;
+    var slot = plotW / n;
+    var barW = Math.min(24, slot * 0.6);
+
+    for (var g = 0; g <= 4; g++) {
+      var gv = (maxV / 4) * g;
+      var gy = padT + plotH - (gv / maxV) * plotH;
+      svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: gy, y2: gy, class: "gridline" }));
+      var t = el("text", { x: padL - 8, y: gy + 3, class: "axis-label", "text-anchor": "end" });
+      t.textContent = Math.round(gv).toLocaleString();
+      svg.appendChild(t);
+    }
+    svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: padT + plotH, y2: padT + plotH, class: "baseline" }));
+
+    var step = Math.max(1, Math.ceil(n / 10));
+
+    data.forEach(function (d, i) {
+      var bx = padL + i * slot + (slot - barW) / 2;
+      var bh = (d.value / maxV) * plotH;
+      var by = padT + plotH - bh;
+      var bar = el("rect", {
+        x: bx, y: by, width: barW, height: Math.max(bh, 0.5),
+        rx: 4, ry: 4, fill: accent
+      });
+      bar.style.cursor = "pointer";
+      bar.addEventListener("pointermove", function (evt) {
+        bar.setAttribute("opacity", "0.75");
+        showTooltip(evt.clientX, evt.clientY, opts.yLabel + " · " + d.label, d.value.toLocaleString());
+      });
+      bar.addEventListener("pointerleave", function () {
+        bar.setAttribute("opacity", "1");
+        hideTooltip();
+      });
+      svg.appendChild(bar);
+
+      if (i % step === 0 || i === n - 1) {
+        var t2 = el("text", { x: bx + barW / 2, y: h - 8, class: "axis-label", "text-anchor": "middle" });
+        t2.textContent = d.label;
+        svg.appendChild(t2);
+      }
+    });
+
+    container.appendChild(svg);
+  }
+
+  // ---------- Load data & render ----------
+  fetch("papers.json")
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var papers = data.papers;
+      document.getElementById("stat-total-papers").textContent = papers.length.toLocaleString();
+      document.getElementById("footer-orcid").textContent = data.meta.orcid;
+
+      // Citations by year, aggregated across all papers (OpenAlex only breaks these out from ~2012)
+      var citByYear = {};
+      papers.forEach(function (p) {
+        (p.counts_by_year || []).forEach(function (cy) {
+          citByYear[cy.year] = (citByYear[cy.year] || 0) + cy.cited_by_count;
+        });
+      });
+      var years = Object.keys(citByYear).map(Number).sort(function (a, b) { return a - b; });
+      var perYearData = years.map(function (y) { return { label: String(y), value: citByYear[y] }; });
+      var cumulative = 0;
+      var cumulativeData = perYearData.map(function (d) {
+        cumulative += d.value;
+        return { label: d.label, value: cumulative };
+      });
+
+      lineChart(document.getElementById("chart-cumulative"), cumulativeData, { yLabel: "Cumulative citations" });
+      barChart(document.getElementById("chart-per-year"), perYearData, { yLabel: "Citations" });
+
+      // Papers published per year
+      var pubByYear = {};
+      papers.forEach(function (p) {
+        if (p.year) pubByYear[p.year] = (pubByYear[p.year] || 0) + 1;
+      });
+      var pubYears = Object.keys(pubByYear).map(Number).sort(function (a, b) { return a - b; });
+      var pubData = pubYears.map(function (y) { return { label: String(y), value: pubByYear[y] }; });
+      barChart(document.getElementById("chart-papers-per-year"), pubData, { yLabel: "Papers" });
+
+      // Paper list, newest first
+      var sorted = papers.slice().sort(function (a, b) { return (b.year || 0) - (a.year || 0); });
+      var list = document.getElementById("paper-list");
+      sorted.forEach(function (p) {
+        var li = document.createElement("li");
+
+        var titleDiv = document.createElement("div");
+        titleDiv.className = "paper-title";
+        var a = document.createElement("a");
+        a.href = p.url || p.doi || "#";
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = p.title;
+        titleDiv.appendChild(a);
+        li.appendChild(titleDiv);
+
+        var meta = document.createElement("div");
+        meta.className = "paper-meta";
+        meta.textContent = [p.year, p.venue].filter(Boolean).join(" · ");
+        li.appendChild(meta);
+
+        if (p.co_authors && p.co_authors.length) {
+          var authors = document.createElement("div");
+          authors.className = "paper-authors";
+          authors.textContent = p.co_authors.join(", ");
+          li.appendChild(authors);
+        }
+
+        list.appendChild(li);
+      });
+    })
+    .catch(function (err) {
+      document.getElementById("paper-list").textContent = "Could not load papers.json: " + err;
+    });
+})();
+</script>
+</body>
+</html>
