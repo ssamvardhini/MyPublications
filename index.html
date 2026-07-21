@@ -3,31 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Brendan MacLean — Publications</title>
+<title>Samvardhini Sridharan — Publications</title>
 <style>
   :root {
     color-scheme: light;
-    --page-plane:     #f9f9f7;
-    --surface-1:      #fcfcfb;
-    --text-primary:   #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted:     #898781;
-    --gridline:       #e1e0d9;
-    --baseline:       #c3c2b7;
-    --border:         rgba(11,11,11,0.10);
-    --accent:         #4b2e83; /* UW purple */
+    --page-plane:     #f7f1ea;
+    --surface-1:      #fffbf6;
+    --text-primary:   #2b2420;
+    --text-secondary: #6b5f54;
+    --text-muted:     #9c9086;
+    --gridline:       #e8ddd0;
+    --baseline:       #d8cabb;
+    --border:         rgba(43,36,32,0.10);
+    --accent:         #4b2e83; /* UW purple, primary UI accent */
     --accent-wash:    rgba(75,46,131,0.10);
   }
   @media (prefers-color-scheme: dark) {
     :root:where(:not([data-theme="light"])) {
       color-scheme: dark;
-      --page-plane:     #0d0d0d;
-      --surface-1:      #1a1a19;
-      --text-primary:   #ffffff;
-      --text-secondary: #c3c2b7;
-      --text-muted:     #898781;
-      --gridline:       #2c2c2a;
-      --baseline:       #383835;
+      --page-plane:     #17130f;
+      --surface-1:      #211c17;
+      --text-primary:   #f5efe8;
+      --text-secondary: #cbbfae;
+      --text-muted:     #9c9086;
+      --gridline:       #332c24;
+      --baseline:       #453b30;
       --border:         rgba(255,255,255,0.10);
       --accent:         #9d8fd0;
       --accent-wash:    rgba(157,143,208,0.14);
@@ -35,13 +35,13 @@
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --page-plane:     #0d0d0d;
-    --surface-1:      #1a1a19;
-    --text-primary:   #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted:     #898781;
-    --gridline:       #2c2c2a;
-    --baseline:       #383835;
+    --page-plane:     #17130f;
+    --surface-1:      #211c17;
+    --text-primary:   #f5efe8;
+    --text-secondary: #cbbfae;
+    --text-muted:     #9c9086;
+    --gridline:       #332c24;
+    --baseline:       #453b30;
     --border:         rgba(255,255,255,0.10);
     --accent:         #9d8fd0;
     --accent-wash:    rgba(157,143,208,0.14);
@@ -53,19 +53,18 @@
     background: var(--page-plane);
     color: var(--text-primary);
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    line-height: 1.5;
+    line-height: 1.6;
   }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px 96px; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
 
   header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
   h1 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 400;
-    font-size: 2.25rem;
-    margin: 0 0 6px;
+    font-weight: 700;
+    font-size: 2.1rem;
+    margin: 0 0 10px;
     letter-spacing: -0.01em;
   }
-  .bio { color: var(--text-secondary); margin: 0; max-width: 52ch; }
+  .bio { color: var(--text-secondary); margin: 0; max-width: 54ch; font-size: 1.05rem; }
 
   .theme-toggle {
     flex: none;
@@ -79,50 +78,41 @@
   }
   .theme-toggle:hover { border-color: var(--accent); }
 
-  .stat-row { margin: 40px 0 8px; }
-  .stat-tile {
-    display: inline-block;
-    background: var(--surface-1);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 28px;
-  }
-  .stat-tile .label {
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    margin: 0 0 4px;
-  }
-  .stat-tile .value {
-    font-size: 2.5rem;
-    font-weight: 600;
-    line-height: 1;
-  }
-
-  section.charts { margin-top: 48px; }
+  section { margin-top: 52px; }
   h2 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 400;
-    font-size: 1.4rem;
+    font-weight: 700;
+    font-size: 1.3rem;
     margin: 0 0 4px;
   }
-  .section-note { color: var(--text-muted); font-size: 0.85rem; margin: 0 0 20px; }
+  .section-note { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 20px; }
 
-  .chart-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 28px;
+  .legend-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-1);
+    border-radius: 999px;
+    padding: 7px 14px 7px 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    transition: opacity 0.15s;
   }
+  .chip:hover { border-color: var(--chip-color, var(--accent)); }
+  .chip.inactive { opacity: 0.4; }
+  .chip .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--chip-color, var(--accent));
+    flex: none;
+  }
+
   .chart-card {
     background: var(--surface-1);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 20px 20px 12px;
-  }
-  .chart-card h3 {
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin: 0 0 12px;
   }
   .chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
   .axis-label { fill: var(--text-muted); font-size: 10px; }
@@ -135,32 +125,62 @@
     background: var(--surface-1);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 6px 10px;
+    padding: 8px 12px;
     font-size: 0.8rem;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.14);
     opacity: 0;
     transition: opacity 0.1s;
     white-space: nowrap;
     z-index: 10;
   }
+  .tooltip .tt-row { display: flex; align-items: center; gap: 6px; }
+  .tooltip .tt-row + .tt-row { margin-top: 4px; }
+  .tooltip .tt-key { width: 10px; height: 2px; border-radius: 1px; flex: none; }
   .tooltip .tt-value { color: var(--text-primary); font-weight: 600; }
   .tooltip .tt-label { color: var(--text-secondary); }
+  .tooltip .tt-header { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 4px; }
 
-  section.papers { margin-top: 48px; }
-  ul.paper-list { list-style: none; margin: 0; padding: 0; }
-  ul.paper-list li {
-    padding: 16px 0;
-    border-top: 1px solid var(--gridline);
+  .timeline-list { position: relative; padding-left: 24px; }
+  .timeline-list::before {
+    content: "";
+    position: absolute;
+    left: 4px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--gridline);
   }
-  ul.paper-list li:last-child { border-bottom: 1px solid var(--gridline); }
-  .paper-title a {
+  .timeline-card {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--card-color, var(--accent));
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .timeline-card::before {
+    content: "";
+    position: absolute;
+    left: -28px; top: 24px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--card-color, var(--accent));
+    border: 2px solid var(--page-plane);
+  }
+  .timeline-card.highlight {
+    box-shadow: 0 0 0 3px var(--card-color, var(--accent));
+    transform: translateX(2px);
+  }
+  .timeline-year { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
+  .timeline-title a {
     color: var(--text-primary);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.05rem;
   }
-  .paper-title a:hover { color: var(--accent); text-decoration: underline; }
-  .paper-meta { color: var(--text-secondary); font-size: 0.9rem; margin-top: 3px; }
-  .paper-authors { color: var(--text-muted); font-size: 0.85rem; margin-top: 3px; }
+  .timeline-title a:hover { color: var(--card-color, var(--accent)); text-decoration: underline; }
+  .timeline-venue { color: var(--text-secondary); font-size: 0.9rem; margin-top: 2px; }
+  .timeline-blurb { margin-top: 10px; color: var(--text-primary); }
 
   footer {
     margin-top: 56px;
@@ -169,6 +189,7 @@
     border-top: 1px solid var(--gridline);
     padding-top: 16px;
   }
+  footer a { color: inherit; }
 </style>
 </head>
 <body>
@@ -176,48 +197,32 @@
 
   <header>
     <div>
-      <h1>Brendan MacLean</h1>
-      <p class="bio">Software engineer, Skyline &amp; mass spec proteomics — University of Washington</p>
+      <h1>Samvardhini Sridharan</h1>
+      <p class="bio">From medical imaging to population genomics — exploring how structural
+        variation shapes human and primate genomes, after starting out building real-time
+        navigation tools for cancer imaging.</p>
     </div>
     <button class="theme-toggle" id="theme-toggle" type="button">Dark mode</button>
   </header>
 
-  <div class="stat-row">
-    <div class="stat-tile">
-      <p class="label">Total papers</p>
-      <p class="value" id="stat-total-papers">–</p>
-    </div>
-  </div>
-
-  <section class="charts">
-    <h2>Citations over time</h2>
-    <p class="section-note">OpenAlex breaks out citation counts by year from about 2012 on; earlier
-      citations still count toward each paper's lifetime total but aren't shown year-by-year here.</p>
-    <div class="chart-grid">
-      <div class="chart-card">
-        <h3>Cumulative citations</h3>
-        <div id="chart-cumulative"></div>
-      </div>
-      <div class="chart-card">
-        <h3>Citations per year</h3>
-        <div id="chart-per-year"></div>
-      </div>
-      <div class="chart-card">
-        <h3>Papers published per year</h3>
-        <div id="chart-papers-per-year"></div>
-      </div>
+  <section class="chart-section">
+    <h2>Citations, paper by paper</h2>
+    <p class="section-note">Click a paper below to show or hide it in the chart, and to jump to its story.</p>
+    <div class="legend-row" id="legend"></div>
+    <div class="chart-card">
+      <div id="chart-per-paper"></div>
     </div>
   </section>
 
-  <section class="papers">
-    <h2>Papers</h2>
-    <p class="section-note">Newest first. Titles link to the DOI.</p>
-    <ul class="paper-list" id="paper-list"></ul>
+  <section class="timeline">
+    <h2>The story so far</h2>
+    <p class="section-note">Oldest to newest.</p>
+    <div class="timeline-list" id="timeline-list"></div>
   </section>
 
   <footer>
-    Data from <a href="https://openalex.org" style="color:inherit">OpenAlex</a>, ORCID
-    <span id="footer-orcid"></span>. Built with Claude Code.
+    Data from <a href="https://openalex.org">OpenAlex</a>, ORCID
+    <a href="https://orcid.org/0000-0002-2224-4124">0000-0002-2224-4124</a>. Built with Claude Code.
   </footer>
 
 </div>
@@ -228,56 +233,88 @@
 (function () {
   "use strict";
 
+  var PAPER_META = {
+    "W7161563625": {
+      color: { light: "#4b2e83", dark: "#9d8fd0" },
+      blurb: "My most recent work, published in Nature Communications, maps recurring structural " +
+        "variation at a hotspot on chromosome 17 across humans and great apes — part of the " +
+        "Sudmant Lab's work on genome evolution."
+    },
+    "W3096036856": {
+      color: { light: "#b5563a", dark: "#d98a6f" },
+      blurb: "Early in my research career, I helped evaluate a real-time optical-tracking " +
+        "navigation system for contrast-enhanced ultrasound imaging, aimed at improving how " +
+        "clinicians track tumors during scans."
+    },
+    "W2967249699": {
+      color: { light: "#1f7a6c", dark: "#4bab99" },
+      blurb: "My first paper explored novel radiomics techniques for early breast cancer " +
+        "detection using ultrasonography — the start of my interest in imaging and quantitative " +
+        "biology."
+    }
+  };
+
   // ---------- Theme toggle ----------
   var root = document.documentElement;
   var toggleBtn = document.getElementById("theme-toggle");
-  function applyTheme(theme) {
-    if (theme) {
-      root.setAttribute("data-theme", theme);
-    } else {
-      root.removeAttribute("data-theme");
-    }
-    toggleBtn.textContent = currentIsDark() ? "Light mode" : "Dark mode";
-  }
-  function currentIsDark() {
+  function isDark() {
     var stamped = root.getAttribute("data-theme");
     if (stamped === "dark") return true;
     if (stamped === "light") return false;
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
+  function applyTheme(theme) {
+    if (theme) root.setAttribute("data-theme", theme);
+    else root.removeAttribute("data-theme");
+    toggleBtn.textContent = isDark() ? "Light mode" : "Dark mode";
+    render(); // re-render charts with theme-correct colors
+  }
   toggleBtn.addEventListener("click", function () {
-    applyTheme(currentIsDark() ? "light" : "dark");
+    applyTheme(isDark() ? "light" : "dark");
   });
-  applyTheme(root.getAttribute("data-theme"));
 
-  // ---------- Tooltip helper ----------
+  function colorFor(id) {
+    var meta = PAPER_META[id];
+    if (!meta) return getComputedStyle(root).getPropertyValue("--accent").trim();
+    return isDark() ? meta.color.dark : meta.color.light;
+  }
+
+  // ---------- Tooltip ----------
   var tooltip = document.getElementById("tooltip");
-  function showTooltip(x, y, labelText, valueText) {
+  function showTooltip(x, y, header, rows) {
     tooltip.innerHTML = "";
-    var valueEl = document.createElement("div");
-    valueEl.className = "tt-value";
-    valueEl.textContent = valueText;
-    var labelEl = document.createElement("div");
-    labelEl.className = "tt-label";
-    labelEl.textContent = labelText;
-    tooltip.appendChild(valueEl);
-    tooltip.appendChild(labelEl);
+    var h = document.createElement("div");
+    h.className = "tt-header";
+    h.textContent = header;
+    tooltip.appendChild(h);
+    rows.forEach(function (row) {
+      var r = document.createElement("div");
+      r.className = "tt-row";
+      var key = document.createElement("span");
+      key.className = "tt-key";
+      key.style.background = row.color;
+      var value = document.createElement("span");
+      value.className = "tt-value";
+      value.textContent = row.value;
+      var label = document.createElement("span");
+      label.className = "tt-label";
+      label.textContent = row.label;
+      r.appendChild(key); r.appendChild(value); r.appendChild(label);
+      tooltip.appendChild(r);
+    });
     tooltip.style.left = (x + 12) + "px";
     tooltip.style.top = (y + 12) + "px";
     tooltip.style.opacity = "1";
   }
   function hideTooltip() { tooltip.style.opacity = "0"; }
 
-  var accent = getComputedStyle(root).getPropertyValue("--accent").trim() || "#4b2e83";
-
-  // ---------- Chart builders (plain SVG, no libraries) ----------
+  // ---------- SVG helpers ----------
   var NS = "http://www.w3.org/2000/svg";
   function el(tag, attrs) {
     var e = document.createElementNS(NS, tag);
     for (var k in attrs) e.setAttribute(k, attrs[k]);
     return e;
   }
-
   function niceMax(v) {
     if (v <= 0) return 1;
     var mag = Math.pow(10, Math.floor(Math.log10(v)));
@@ -286,78 +323,100 @@
     return step * mag;
   }
 
-  function lineChart(container, data, opts) {
-    // data: [{label, value}], opts: {yLabel}
-    var w = 800, h = 220, padL = 44, padR = 12, padT = 12, padB = 28;
+  var papers = [];       // raw papers, chronological
+  var visible = {};       // id -> bool
+
+  function buildPerYearSeries(paper, endYear) {
+    var byYear = {};
+    (paper.counts_by_year || []).forEach(function (cy) { byYear[cy.year] = cy.cited_by_count; });
+    var series = [];
+    for (var y = paper.year; y <= endYear; y++) {
+      series.push({ year: y, value: byYear[y] || 0 });
+    }
+    return series;
+  }
+
+  function multiLineChart(container, seriesList) {
+    container.innerHTML = "";
+    var w = 720, h = 240, padL = 36, padR = 12, padT = 16, padB = 28;
     var plotW = w - padL - padR, plotH = h - padT - padB;
-    var svg = el("svg", { viewBox: "0 0 " + w + " " + h });
-    var maxV = niceMax(Math.max.apply(null, data.map(function (d) { return d.value; })));
-    var n = data.length;
-    function xAt(i) { return padL + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW); }
+
+    var allYears = [];
+    seriesList.forEach(function (s) { s.data.forEach(function (d) { allYears.push(d.year); }); });
+    var minYear = Math.min.apply(null, allYears), maxYear = Math.max.apply(null, allYears);
+    var span = Math.max(1, maxYear - minYear);
+
+    var visibleSeries = seriesList.filter(function (s) { return visible[s.id]; });
+    var maxV = niceMax(Math.max.apply(null, [1].concat(
+      visibleSeries.length ? visibleSeries.flatMap(function (s) { return s.data.map(function (d) { return d.value; }); }) : [1]
+    )));
+
+    function xAt(y) { return padL + ((y - minYear) / span) * plotW; }
     function yAt(v) { return padT + plotH - (v / maxV) * plotH; }
 
-    // gridlines (4 steps)
-    for (var g = 0; g <= 4; g++) {
-      var gv = (maxV / 4) * g;
+    var svg = el("svg", { viewBox: "0 0 " + w + " " + h });
+
+    var gridSteps = Math.min(4, maxV);
+    var seenLabels = {};
+    for (var g = 0; g <= gridSteps; g++) {
+      var gv = (maxV / gridSteps) * g;
+      var label = Math.round(gv);
+      if (seenLabels[label]) continue;
+      seenLabels[label] = true;
       var gy = yAt(gv);
       svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: gy, y2: gy, class: "gridline" }));
       var t = el("text", { x: padL - 8, y: gy + 3, class: "axis-label", "text-anchor": "end" });
-      t.textContent = Math.round(gv).toLocaleString();
+      t.textContent = label;
       svg.appendChild(t);
     }
     svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: padT + plotH, y2: padT + plotH, class: "baseline" }));
 
-    // x labels (sparse: first, last, and a few in between)
-    var step = Math.max(1, Math.ceil(n / 8));
-    for (var i = 0; i < n; i += step) {
-      var t2 = el("text", { x: xAt(i), y: h - 8, class: "axis-label", "text-anchor": "middle" });
-      t2.textContent = data[i].label;
+    for (var y = minYear; y <= maxYear; y++) {
+      var t2 = el("text", { x: xAt(y), y: h - 8, class: "axis-label", "text-anchor": "middle" });
+      t2.textContent = y;
       svg.appendChild(t2);
     }
-    if ((n - 1) % step !== 0) {
-      var t3 = el("text", { x: xAt(n - 1), y: h - 8, class: "axis-label", "text-anchor": "middle" });
-      t3.textContent = data[n - 1].label;
-      svg.appendChild(t3);
-    }
 
-    // area wash
-    var areaPts = data.map(function (d, i) { return xAt(i) + "," + yAt(d.value); }).join(" ");
-    var areaPath = "M" + xAt(0) + "," + (padT + plotH) + " L" + areaPts + " L" + xAt(n - 1) + "," + (padT + plotH) + " Z";
-    svg.appendChild(el("path", { d: areaPath, fill: accent, opacity: "0.10", stroke: "none" }));
+    seriesList.forEach(function (s) {
+      if (!visible[s.id]) return;
+      var color = colorFor(s.id);
+      var pts = s.data.map(function (d) { return xAt(d.year) + "," + yAt(d.value); }).join(" ");
+      svg.appendChild(el("polyline", {
+        points: pts, fill: "none", stroke: color, "stroke-width": "2",
+        "stroke-linejoin": "round", "stroke-linecap": "round"
+      }));
+      s.data.forEach(function (d) {
+        svg.appendChild(el("circle", {
+          cx: xAt(d.year), cy: yAt(d.value), r: 4, fill: color,
+          stroke: "var(--surface-1)", "stroke-width": "2"
+        }));
+      });
+    });
 
-    // line
-    var linePts = data.map(function (d, i) { return xAt(i) + "," + yAt(d.value); }).join(" ");
-    svg.appendChild(el("polyline", { points: linePts, fill: "none", stroke: accent, "stroke-width": "2", "stroke-linejoin": "round", "stroke-linecap": "round" }));
-
-    // end marker + direct label
-    var lastX = xAt(n - 1), lastY = yAt(data[n - 1].value);
-    svg.appendChild(el("circle", { cx: lastX, cy: lastY, r: 4, fill: accent, stroke: "var(--surface-1)", "stroke-width": "2" }));
-    var lastLabel = el("text", { x: lastX - 6, y: lastY - 10, class: "axis-label", "text-anchor": "end", style: "font-weight:600" });
-    lastLabel.textContent = data[n - 1].value.toLocaleString();
-    svg.appendChild(lastLabel);
-
-    // crosshair + hit layer
+    // crosshair + hover
     var crosshair = el("line", { x1: 0, x2: 0, y1: padT, y2: padT + plotH, class: "baseline", style: "opacity:0" });
     svg.appendChild(crosshair);
-    var hoverDot = el("circle", { r: 5, fill: accent, stroke: "var(--surface-1)", "stroke-width": "2", style: "opacity:0" });
-    svg.appendChild(hoverDot);
-
     var hit = el("rect", { x: padL, y: padT, width: plotW, height: plotH, fill: "transparent" });
     hit.addEventListener("pointermove", function (evt) {
       var rect = svg.getBoundingClientRect();
       var relX = ((evt.clientX - rect.left) / rect.width) * w;
-      var idx = Math.round(((relX - padL) / plotW) * (n - 1));
-      idx = Math.max(0, Math.min(n - 1, idx));
-      var px = xAt(idx), py = yAt(data[idx].value);
+      var yearFloat = minYear + ((relX - padL) / plotW) * span;
+      var year = Math.round(Math.max(minYear, Math.min(maxYear, yearFloat)));
+      var px = xAt(year);
       crosshair.setAttribute("x1", px); crosshair.setAttribute("x2", px);
       crosshair.setAttribute("style", "opacity:1");
-      hoverDot.setAttribute("cx", px); hoverDot.setAttribute("cy", py);
-      hoverDot.setAttribute("style", "opacity:1");
-      showTooltip(evt.clientX, evt.clientY, opts.yLabel + " · " + data[idx].label, data[idx].value.toLocaleString());
+
+      var rows = [];
+      seriesList.forEach(function (s) {
+        if (!visible[s.id]) return;
+        var point = s.data.filter(function (d) { return d.year === year; })[0];
+        if (point) rows.push({ color: colorFor(s.id), value: String(point.value), label: s.shortLabel });
+      });
+      if (rows.length) showTooltip(evt.clientX, evt.clientY, "Citations in " + year, rows);
+      else hideTooltip();
     });
     hit.addEventListener("pointerleave", function () {
       crosshair.setAttribute("style", "opacity:0");
-      hoverDot.setAttribute("style", "opacity:0");
       hideTooltip();
     });
     svg.appendChild(hit);
@@ -365,124 +424,101 @@
     container.appendChild(svg);
   }
 
-  function barChart(container, data, opts) {
-    var w = 800, h = 220, padL = 44, padR = 12, padT = 12, padB = 28;
-    var plotW = w - padL - padR, plotH = h - padT - padB;
-    var svg = el("svg", { viewBox: "0 0 " + w + " " + h });
-    var maxV = niceMax(Math.max.apply(null, data.map(function (d) { return d.value; })));
-    var n = data.length;
-    var slot = plotW / n;
-    var barW = Math.min(24, slot * 0.6);
+  function render() {
+    var currentYear = new Date().getFullYear();
+    var maxDataYear = Math.max(currentYear, Math.max.apply(null, papers.map(function (p) { return p.year; })));
+    var seriesList = papers.map(function (p) {
+      return {
+        id: p.id,
+        shortLabel: p.year + " · " + p.title.slice(0, 40) + (p.title.length > 40 ? "…" : ""),
+        data: buildPerYearSeries(p, maxDataYear)
+      };
+    });
+    multiLineChart(document.getElementById("chart-per-paper"), seriesList);
 
-    for (var g = 0; g <= 4; g++) {
-      var gv = (maxV / 4) * g;
-      var gy = padT + plotH - (gv / maxV) * plotH;
-      svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: gy, y2: gy, class: "gridline" }));
-      var t = el("text", { x: padL - 8, y: gy + 3, class: "axis-label", "text-anchor": "end" });
-      t.textContent = Math.round(gv).toLocaleString();
-      svg.appendChild(t);
-    }
-    svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: padT + plotH, y2: padT + plotH, class: "baseline" }));
-
-    var step = Math.max(1, Math.ceil(n / 10));
-
-    data.forEach(function (d, i) {
-      var bx = padL + i * slot + (slot - barW) / 2;
-      var bh = (d.value / maxV) * plotH;
-      var by = padT + plotH - bh;
-      var bar = el("rect", {
-        x: bx, y: by, width: barW, height: Math.max(bh, 0.5),
-        rx: 4, ry: 4, fill: accent
+    // legend chips (rebuild to pick up theme-correct colors)
+    var legend = document.getElementById("legend");
+    legend.innerHTML = "";
+    papers.forEach(function (p) {
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip" + (visible[p.id] ? "" : " inactive");
+      chip.style.setProperty("--chip-color", colorFor(p.id));
+      var dot = document.createElement("span");
+      dot.className = "dot";
+      var label = document.createElement("span");
+      label.textContent = p.year + " — " + p.title.slice(0, 36) + (p.title.length > 36 ? "…" : "");
+      chip.appendChild(dot);
+      chip.appendChild(label);
+      chip.addEventListener("click", function () {
+        visible[p.id] = !visible[p.id];
+        render();
+        var card = document.getElementById("card-" + p.id);
+        if (card) {
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+          card.classList.add("highlight");
+          setTimeout(function () { card.classList.remove("highlight"); }, 1600);
+        }
       });
-      bar.style.cursor = "pointer";
-      bar.addEventListener("pointermove", function (evt) {
-        bar.setAttribute("opacity", "0.75");
-        showTooltip(evt.clientX, evt.clientY, opts.yLabel + " · " + d.label, d.value.toLocaleString());
-      });
-      bar.addEventListener("pointerleave", function () {
-        bar.setAttribute("opacity", "1");
-        hideTooltip();
-      });
-      svg.appendChild(bar);
-
-      if (i % step === 0 || i === n - 1) {
-        var t2 = el("text", { x: bx + barW / 2, y: h - 8, class: "axis-label", "text-anchor": "middle" });
-        t2.textContent = d.label;
-        svg.appendChild(t2);
-      }
+      legend.appendChild(chip);
     });
 
-    container.appendChild(svg);
+    // timeline card colors (in case theme changed)
+    papers.forEach(function (p) {
+      var card = document.getElementById("card-" + p.id);
+      if (card) card.style.setProperty("--card-color", colorFor(p.id));
+    });
   }
 
-  // ---------- Load data & render ----------
-  fetch("papers.json")
+  // ---------- Load & build ----------
+  fetch("my_papers.json")
     .then(function (r) { return r.json(); })
     .then(function (data) {
-      var papers = data.papers;
-      document.getElementById("stat-total-papers").textContent = papers.length.toLocaleString();
-      document.getElementById("footer-orcid").textContent = data.meta.orcid;
+      papers = data.papers.slice().sort(function (a, b) { return (a.year || 0) - (b.year || 0); });
+      papers.forEach(function (p) { visible[p.id] = true; });
 
-      // Citations by year, aggregated across all papers (OpenAlex only breaks these out from ~2012)
-      var citByYear = {};
+      var list = document.getElementById("timeline-list");
       papers.forEach(function (p) {
-        (p.counts_by_year || []).forEach(function (cy) {
-          citByYear[cy.year] = (citByYear[cy.year] || 0) + cy.cited_by_count;
-        });
-      });
-      var years = Object.keys(citByYear).map(Number).sort(function (a, b) { return a - b; });
-      var perYearData = years.map(function (y) { return { label: String(y), value: citByYear[y] }; });
-      var cumulative = 0;
-      var cumulativeData = perYearData.map(function (d) {
-        cumulative += d.value;
-        return { label: d.label, value: cumulative };
-      });
+        var meta = PAPER_META[p.id] || {};
+        var card = document.createElement("div");
+        card.className = "timeline-card";
+        card.id = "card-" + p.id;
+        card.style.setProperty("--card-color", colorFor(p.id));
 
-      lineChart(document.getElementById("chart-cumulative"), cumulativeData, { yLabel: "Cumulative citations" });
-      barChart(document.getElementById("chart-per-year"), perYearData, { yLabel: "Citations" });
+        var yearEl = document.createElement("div");
+        yearEl.className = "timeline-year";
+        yearEl.textContent = p.year;
+        card.appendChild(yearEl);
 
-      // Papers published per year
-      var pubByYear = {};
-      papers.forEach(function (p) {
-        if (p.year) pubByYear[p.year] = (pubByYear[p.year] || 0) + 1;
-      });
-      var pubYears = Object.keys(pubByYear).map(Number).sort(function (a, b) { return a - b; });
-      var pubData = pubYears.map(function (y) { return { label: String(y), value: pubByYear[y] }; });
-      barChart(document.getElementById("chart-papers-per-year"), pubData, { yLabel: "Papers" });
-
-      // Paper list, newest first
-      var sorted = papers.slice().sort(function (a, b) { return (b.year || 0) - (a.year || 0); });
-      var list = document.getElementById("paper-list");
-      sorted.forEach(function (p) {
-        var li = document.createElement("li");
-
-        var titleDiv = document.createElement("div");
-        titleDiv.className = "paper-title";
+        var titleEl = document.createElement("div");
+        titleEl.className = "timeline-title";
         var a = document.createElement("a");
         a.href = p.url || p.doi || "#";
         a.target = "_blank";
         a.rel = "noopener";
         a.textContent = p.title;
-        titleDiv.appendChild(a);
-        li.appendChild(titleDiv);
+        titleEl.appendChild(a);
+        card.appendChild(titleEl);
 
-        var meta = document.createElement("div");
-        meta.className = "paper-meta";
-        meta.textContent = [p.year, p.venue].filter(Boolean).join(" · ");
-        li.appendChild(meta);
+        var venueEl = document.createElement("div");
+        venueEl.className = "timeline-venue";
+        venueEl.textContent = p.venue;
+        card.appendChild(venueEl);
 
-        if (p.co_authors && p.co_authors.length) {
-          var authors = document.createElement("div");
-          authors.className = "paper-authors";
-          authors.textContent = p.co_authors.join(", ");
-          li.appendChild(authors);
+        if (meta.blurb) {
+          var blurbEl = document.createElement("div");
+          blurbEl.className = "timeline-blurb";
+          blurbEl.textContent = meta.blurb;
+          card.appendChild(blurbEl);
         }
 
-        list.appendChild(li);
+        list.appendChild(card);
       });
+
+      render();
     })
     .catch(function (err) {
-      document.getElementById("paper-list").textContent = "Could not load papers.json: " + err;
+      document.getElementById("timeline-list").textContent = "Could not load my_papers.json: " + err;
     });
 })();
 </script>
