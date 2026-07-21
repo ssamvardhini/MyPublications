@@ -86,35 +86,41 @@
   }
   .section-note { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 20px; }
 
-  .legend-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-  .chip {
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+  }
+  .mini-chart-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--chip-color, var(--accent));
+    border-radius: 14px;
+    padding: 16px 16px 10px;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+  }
+  .mini-chart-card:hover { box-shadow: 0 0 0 2px var(--chip-color, var(--accent)); }
+  .mini-chart-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface-1);
-    border-radius: 999px;
-    padding: 7px 14px 7px 10px;
-    cursor: pointer;
+    margin-bottom: 10px;
     font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-primary);
-    transition: opacity 0.15s;
   }
-  .chip:hover { border-color: var(--chip-color, var(--accent)); }
-  .chip.inactive { opacity: 0.4; }
-  .chip .dot {
+  .mini-chart-header .dot {
     width: 10px; height: 10px; border-radius: 50%;
     background: var(--chip-color, var(--accent));
     flex: none;
   }
-
-  .chart-card {
-    background: var(--surface-1);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px 20px 12px;
+  .mini-chart-total {
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: auto;
   }
-  .chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .mini-chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
   .axis-label { fill: var(--text-muted); font-size: 10px; }
   .gridline { stroke: var(--gridline); stroke-width: 1; }
   .baseline { stroke: var(--baseline); stroke-width: 1; }
@@ -207,16 +213,13 @@
 
   <section class="chart-section">
     <h2>Citations, paper by paper</h2>
-    <p class="section-note">Click a paper below to show or hide it in the chart, and to jump to its story.</p>
-    <div class="legend-row" id="legend"></div>
-    <div class="chart-card">
-      <div id="chart-per-paper"></div>
-    </div>
+    <p class="section-note">Each paper tracked on its own. Click one to jump to its story.</p>
+    <div class="chart-grid" id="chart-grid"></div>
   </section>
 
   <section class="timeline">
     <h2>The story so far</h2>
-    <p class="section-note">Oldest to newest.</p>
+    <p class="section-note">Newest to oldest.</p>
     <div class="timeline-list" id="timeline-list"></div>
   </section>
 
@@ -323,8 +326,7 @@
     return step * mag;
   }
 
-  var papers = [];       // raw papers, chronological
-  var visible = {};       // id -> bool
+  var papers = [];       // raw papers, newest first
 
   function buildPerYearSeries(paper, endYear) {
     var byYear = {};
@@ -336,27 +338,29 @@
     return series;
   }
 
-  function multiLineChart(container, seriesList) {
+  function scrollToCard(id) {
+    var card = document.getElementById("card-" + id);
+    if (!card) return;
+    card.scrollIntoView({ behavior: "auto", block: "center" });
+    card.classList.add("highlight");
+    setTimeout(function () { card.classList.remove("highlight"); }, 1600);
+  }
+
+  function singleLineChart(container, series, color) {
     container.innerHTML = "";
-    var w = 720, h = 240, padL = 36, padR = 12, padT = 16, padB = 28;
+    var w = 320, h = 120, padL = 26, padR = 8, padT = 10, padB = 20;
     var plotW = w - padL - padR, plotH = h - padT - padB;
 
-    var allYears = [];
-    seriesList.forEach(function (s) { s.data.forEach(function (d) { allYears.push(d.year); }); });
-    var minYear = Math.min.apply(null, allYears), maxYear = Math.max.apply(null, allYears);
+    var minYear = series[0].year, maxYear = series[series.length - 1].year;
     var span = Math.max(1, maxYear - minYear);
-
-    var visibleSeries = seriesList.filter(function (s) { return visible[s.id]; });
-    var maxV = niceMax(Math.max.apply(null, [1].concat(
-      visibleSeries.length ? visibleSeries.flatMap(function (s) { return s.data.map(function (d) { return d.value; }); }) : [1]
-    )));
+    var maxV = niceMax(Math.max.apply(null, [1].concat(series.map(function (d) { return d.value; }))));
 
     function xAt(y) { return padL + ((y - minYear) / span) * plotW; }
     function yAt(v) { return padT + plotH - (v / maxV) * plotH; }
 
     var svg = el("svg", { viewBox: "0 0 " + w + " " + h });
 
-    var gridSteps = Math.min(4, maxV);
+    var gridSteps = Math.min(2, maxV);
     var seenLabels = {};
     for (var g = 0; g <= gridSteps; g++) {
       var gv = (maxV / gridSteps) * g;
@@ -365,35 +369,30 @@
       seenLabels[label] = true;
       var gy = yAt(gv);
       svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: gy, y2: gy, class: "gridline" }));
-      var t = el("text", { x: padL - 8, y: gy + 3, class: "axis-label", "text-anchor": "end" });
+      var t = el("text", { x: padL - 6, y: gy + 3, class: "axis-label", "text-anchor": "end" });
       t.textContent = label;
       svg.appendChild(t);
     }
     svg.appendChild(el("line", { x1: padL, x2: w - padR, y1: padT + plotH, y2: padT + plotH, class: "baseline" }));
 
-    for (var y = minYear; y <= maxYear; y++) {
-      var t2 = el("text", { x: xAt(y), y: h - 8, class: "axis-label", "text-anchor": "middle" });
+    [minYear, maxYear].forEach(function (y) {
+      var t2 = el("text", { x: xAt(y), y: h - 6, class: "axis-label", "text-anchor": y === minYear ? "start" : "end" });
       t2.textContent = y;
       svg.appendChild(t2);
-    }
-
-    seriesList.forEach(function (s) {
-      if (!visible[s.id]) return;
-      var color = colorFor(s.id);
-      var pts = s.data.map(function (d) { return xAt(d.year) + "," + yAt(d.value); }).join(" ");
-      svg.appendChild(el("polyline", {
-        points: pts, fill: "none", stroke: color, "stroke-width": "2",
-        "stroke-linejoin": "round", "stroke-linecap": "round"
-      }));
-      s.data.forEach(function (d) {
-        svg.appendChild(el("circle", {
-          cx: xAt(d.year), cy: yAt(d.value), r: 4, fill: color,
-          stroke: "var(--surface-1)", "stroke-width": "2"
-        }));
-      });
     });
 
-    // crosshair + hover
+    var pts = series.map(function (d) { return xAt(d.year) + "," + yAt(d.value); }).join(" ");
+    svg.appendChild(el("polyline", {
+      points: pts, fill: "none", stroke: color, "stroke-width": "2",
+      "stroke-linejoin": "round", "stroke-linecap": "round"
+    }));
+    series.forEach(function (d) {
+      svg.appendChild(el("circle", {
+        cx: xAt(d.year), cy: yAt(d.value), r: 3.5, fill: color,
+        stroke: "var(--surface-1)", "stroke-width": "1.5"
+      }));
+    });
+
     var crosshair = el("line", { x1: 0, x2: 0, y1: padT, y2: padT + plotH, class: "baseline", style: "opacity:0" });
     svg.appendChild(crosshair);
     var hit = el("rect", { x: padL, y: padT, width: plotW, height: plotH, fill: "transparent" });
@@ -405,15 +404,10 @@
       var px = xAt(year);
       crosshair.setAttribute("x1", px); crosshair.setAttribute("x2", px);
       crosshair.setAttribute("style", "opacity:1");
-
-      var rows = [];
-      seriesList.forEach(function (s) {
-        if (!visible[s.id]) return;
-        var point = s.data.filter(function (d) { return d.year === year; })[0];
-        if (point) rows.push({ color: colorFor(s.id), value: String(point.value), label: s.shortLabel });
-      });
-      if (rows.length) showTooltip(evt.clientX, evt.clientY, "Citations in " + year, rows);
+      var point = series.filter(function (d) { return d.year === year; })[0];
+      if (point) showTooltip(evt.clientX, evt.clientY, String(year), [{ color: color, value: String(point.value), label: "citations" }]);
       else hideTooltip();
+      evt.stopPropagation();
     });
     hit.addEventListener("pointerleave", function () {
       crosshair.setAttribute("style", "opacity:0");
@@ -427,40 +421,33 @@
   function render() {
     var currentYear = new Date().getFullYear();
     var maxDataYear = Math.max(currentYear, Math.max.apply(null, papers.map(function (p) { return p.year; })));
-    var seriesList = papers.map(function (p) {
-      return {
-        id: p.id,
-        shortLabel: p.year + " · " + p.title.slice(0, 40) + (p.title.length > 40 ? "…" : ""),
-        data: buildPerYearSeries(p, maxDataYear)
-      };
-    });
-    multiLineChart(document.getElementById("chart-per-paper"), seriesList);
 
-    // legend chips (rebuild to pick up theme-correct colors)
-    var legend = document.getElementById("legend");
-    legend.innerHTML = "";
+    var grid = document.getElementById("chart-grid");
+    grid.innerHTML = "";
     papers.forEach(function (p) {
-      var chip = document.createElement("button");
-      chip.type = "button";
-      chip.className = "chip" + (visible[p.id] ? "" : " inactive");
-      chip.style.setProperty("--chip-color", colorFor(p.id));
+      var color = colorFor(p.id);
+      var card = document.createElement("div");
+      card.className = "mini-chart-card";
+      card.style.setProperty("--chip-color", color);
+
+      var header = document.createElement("div");
+      header.className = "mini-chart-header";
       var dot = document.createElement("span");
       dot.className = "dot";
       var label = document.createElement("span");
-      label.textContent = p.year + " — " + p.title.slice(0, 36) + (p.title.length > 36 ? "…" : "");
-      chip.appendChild(dot);
-      chip.appendChild(label);
-      chip.addEventListener("click", function () {
-        visible[p.id] = !visible[p.id];
-        render();
-        var card = document.getElementById("card-" + p.id);
-        if (card) {
-          card.scrollIntoView({ behavior: "smooth", block: "center" });
-          card.classList.add("highlight");
-          setTimeout(function () { card.classList.remove("highlight"); }, 1600);
-        }
-      });
-      legend.appendChild(chip);
+      label.textContent = p.year + " — " + p.title.slice(0, 30) + (p.title.length > 30 ? "…" : "");
+      var total = document.createElement("span");
+      total.className = "mini-chart-total";
+      total.textContent = p.cited_by_count + " cite" + (p.cited_by_count === 1 ? "" : "s");
+      header.appendChild(dot); header.appendChild(label); header.appendChild(total);
+      card.appendChild(header);
+
+      var chartDiv = document.createElement("div");
+      card.appendChild(chartDiv);
+      singleLineChart(chartDiv, buildPerYearSeries(p, maxDataYear), color);
+
+      card.addEventListener("click", function () { scrollToCard(p.id); });
+      grid.appendChild(card);
     });
 
     // timeline card colors (in case theme changed)
@@ -474,8 +461,7 @@
   fetch("my_papers.json")
     .then(function (r) { return r.json(); })
     .then(function (data) {
-      papers = data.papers.slice().sort(function (a, b) { return (a.year || 0) - (b.year || 0); });
-      papers.forEach(function (p) { visible[p.id] = true; });
+      papers = data.papers.slice().sort(function (a, b) { return (b.year || 0) - (a.year || 0); });
 
       var list = document.getElementById("timeline-list");
       papers.forEach(function (p) {
